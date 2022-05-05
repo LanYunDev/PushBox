@@ -1,3 +1,5 @@
 /Users/lanyun/CLionProjects/PushBox/cmake-build-debug/CMakeFiles/PushBox.dir
+/Users/lanyun/CLionProjects/PushBox/cmake-build-debug/CMakeFiles/test.dir
+/Users/lanyun/CLionProjects/PushBox/cmake-build-debug/CMakeFiles/test2.dir
 /Users/lanyun/CLionProjects/PushBox/cmake-build-debug/CMakeFiles/edit_cache.dir
 /Users/lanyun/CLionProjects/PushBox/cmake-build-debug/CMakeFiles/rebuild_cache.dir
