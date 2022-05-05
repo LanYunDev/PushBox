@@ -2,7 +2,7 @@
 
 这个是我学校工程实践的作业.全程采用Clion编写.如果你遇到一些坑,可以参考一下我的CMakeLists.txt文件或者在尝试我博客中寻找解决办法.
 
-另外本[项目](https://github.com/LanYunDev/PushBox)开源啦~欢迎👏点个Star~
+另外本[项目](https://github.com/LanYunDev/PushBox)开源啦~ 欢迎👏点个Star~
 
 写的不是很好(不过大部分代码行或块都有注释),欢迎👏提Issues和PR(Pull requests).
 
