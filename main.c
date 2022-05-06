@@ -475,7 +475,9 @@ void moveUp(Position *p) {
 
     //人上面是目的地
     if (map[uy][ux] == 4) {
-        map[y][x] = 0;
+        if (map[y][x] == 6) {
+            map[y][x] = 4;
+        } else map[y][x] = 0;
         map[uy][ux] = 6;
         //更新人的坐标
         y = uy;
@@ -547,7 +549,9 @@ void moveDown(Position *p) {
 
     //人下面是目的地
     if (map[uy][ux] == 4) {
-        map[y][x] = 0;
+        if (map[y][x] == 6) {
+            map[y][x] = 4;
+        } else map[y][x] = 0;
         map[uy][ux] = 6;
         //更新人的坐标
         y = uy;
@@ -620,7 +624,9 @@ void moveLeft(Position *p) {
 
     //人左面是目的地
     if (map[uy][ux] == 4) {
-        map[y][x] = 0;
+        if (map[y][x] == 6) {
+            map[y][x] = 4;
+        } else map[y][x] = 0;
         map[uy][ux] = 6;
         //更新人的坐标
         x = ux;
@@ -693,7 +699,9 @@ void moveRight(Position *p) {
 
     //人右面是目的地
     if (map[uy][ux] == 4) {
-        map[y][x] = 0;
+        if (map[y][x] == 6) {
+            map[y][x] = 4;
+        } else map[y][x] = 0;
         map[uy][ux] = 6;
         //更新人的坐标
         x = ux;
@@ -750,13 +758,13 @@ Position *moveBack(Position *head, Position *p) {
     int n = 0;//记录📝指针循环♻️次数
 
     while (tmp->next->next != NULL) {//移动指针到倒数第二个
-        tmp = tmp->next;
-        n++;
+        tmp = tmp->next;//链表tmp指向下一个节点
+        n++;//计数n增加一
     }
 
     //判断步数是否有两步以上，如果有就不进行撤回
     if (!n) {
-        free(del);
+        free(del);//释放指针del的内存
 
         check = 3;//不可再进行撤回标识
 
@@ -764,14 +772,19 @@ Position *moveBack(Position *head, Position *p) {
     }
 
     del = tmp->next; //要删除的位置,即当前位置
-    tmp->next = NULL;
+    tmp->next = NULL;//删除tmp的下一个节点
     p = tmp; //要撤回到的位置
 
+    //如果有相同的坐标，直接删除一个。
+    if ((p->y == del->y) && (p->x == del->x)) {
+        free(del);//释放指针del的内存
+
+        check = 1;//可再进行撤回标识
+
+        return p;
+    }
+
     if ((p->box_x > 0) && (p->box_y > 0)) {   //如果人物移动前有箱子📦的话
-        //撤回人物和撤回箱子📦移动，（顺带覆盖掉了人物）
-//        if (map[del->y][del->x] == 6) {
-//            map[del->y][del->x] = 5;
-//        } else map[del->y][del->x] = 3;
         //撤回人物的移动。
         if (map[p->y][p->x] == 4) {//如果被撤回的位置是目的地
             map[p->y][p->x] = 6;//是，则修改人人在目的地
@@ -787,7 +800,7 @@ Position *moveBack(Position *head, Position *p) {
         else map[p->box_y + y_][p->box_x + x_] = 0;//如果不是，则修改为空
 
         //撤回箱子📦的移动
-        if (map[p->box_y][p->box_x] == 4)//判断箱子📦撤回到的位置是否为为目的地
+        if (map[p->box_y][p->box_x] == 4 || map[p->box_y][p->box_x] == 6)//判断箱子📦撤回到的位置是否为含有目的地
             map[p->box_y][p->box_x] = 5;//是，则将被撤回的位置修改为已完成✅的箱子📦
         else map[p->box_y][p->box_x] = 3;//如果不是，则修改为箱子📦
 
@@ -804,7 +817,7 @@ Position *moveBack(Position *head, Position *p) {
         } else map[del->y][del->x] = 0;//如果不是，则修改为空白
     }
 
-    free(del);
+    free(del);//释放指针del的内存
 
     check = 1;
 
