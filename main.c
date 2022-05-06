@@ -1,14 +1,16 @@
 //推箱子小游戏 Powered By LanYun
 #include <ncurses.h>//对于代码内容关于ncurses.h库那些函数不太明白可以看看我写的[这篇文章](https://lanyundev.vercel.app/posts/a5945d21.html)噢
-#include <stdlib.h>
+#include <stdlib.h>//声明了数值与字符串转换函数, 伪随机数生成函数, 动态内存分配函数, 进程控制函数等公共函数.
 #include <locale.h> // 定义了特定地域的设置，实际上为了让程序在不同地域下运行，需要在程序开始处调用setlocale()函数。
 #include <unistd.h> //sleep()函数
+#include <errno.h> //errno函数,定义了透过错误码来回报错误信息的宏
+#include <time.h> //time()函数,记录📝时间差
 
 //宏定义
-#define WIDTH   8
-#define HEIGHT  8
-#define WORLD_WIDTH 50
-#define WORLD_HEIGHT 20
+#define WIDTH   8 //游戏界面宽度
+#define HEIGHT  8 //游戏界面高度
+#define WORLD_WIDTH 50 //世界宽度
+#define WORLD_HEIGHT 20 //世界高度
 
 //建立链表，用于存储箱子的位置，方便玩家回到上一个位置。
 typedef struct Position {//定义一个结构体，用于存储箱子的位置
@@ -54,15 +56,16 @@ void game_over();//游戏结束函数
 
 WINDOW *PushBox;//定义推箱子窗口
 
-int Level = 1;//当前关卡
-int Top_Level = 1;//最高关卡
-int Latest_Level = 1;//最新关卡
-int Remain_Box = 1;//剩余箱子数
-int ch;//获取输入内容
-int Tmp = 0;//用于存储临时Level
-int check = 0;//退出标识的作用
+long Level = 1;//当前关卡
+long Top_Level = 1;//最高关卡
+long Latest_Level = 1;//最新关卡
+long Total_Level = 14;//总关卡数
+long Remain_Box = 1;//剩余箱子数
+long Tmp = 0;//用于存储临时Level
+int check = 0;//退出标识的作用,及其检测是否有撤回操作
 int x, y;//玩家位置
-int Total_Level = 14;//总关卡数
+int ch;//获取输入内容
+time_t Level_start, Level_end;//记录关卡开始和结束时间
 
 //定义地图数组,二维数组有两个维度,地图是二维的矩形;
 /*  0  表示空
@@ -100,6 +103,8 @@ void Init() {
     sleep(0);//等待0秒
     FILE *fp = fopen("data.txt", "r");//只读打开data.txt文件📃
     if (fp == NULL) {//如果打开失败
+        box(PushBox, 0, 0);//创建box窗口
+        wrefresh(PushBox);//使box窗口生效
         mvprintw(offset_y + WORLD_HEIGHT / 2 - 6, offset_x + 8, "未能打开或不存在data.txt数据文件!");
         mvprintw(offset_y + WORLD_HEIGHT / 2 - 4, offset_x + 8, "尝试自动生成默认data.txt数据文件!");
         refresh();  //将虚拟屏幕上的内容写到显示屏上，并且刷新窗口
@@ -111,33 +116,39 @@ void Init() {
         sleep(1);//等待1秒
         goto FILE_FIX;//重新回到只读打开
     }
-    fscanf(fp, "Top_Level:%d Latest_Level:%d", &Top_Level, &Latest_Level);//读取文件.⚠️：此处，处在一处安全🔐性警告⚠️，但因无能修复而不得不使用。
+    fscanf(fp, "Top_Level:%ld Latest_Level:%ld", &Top_Level, &Latest_Level);//读取文件.⚠️：此处，处在一处安全🔐性警告⚠️，但因无能修复而不得不使用。
     fclose(fp);//关闭文件📃
 
     //检查最高数据是否异常
     if (Top_Level < 1 || Top_Level > Total_Level) {
+        box(PushBox, 0, 0);//创建box窗口
+        wrefresh(PushBox);//使box窗口生效
         mvprintw(offset_y + WORLD_HEIGHT / 2 - 5, offset_x + 9, "检测到最高数据异常,已自动归1 ");
         refresh();  //将虚拟屏幕上的内容写到显示屏上，并且刷新窗口
         Top_Level = 1;//最高数据复位
         sleep(1);//等待1秒
     }
     if (Latest_Level < 1 || Latest_Level > Total_Level) {
+        box(PushBox, 0, 0);//创建box窗口
+        wrefresh(PushBox);//使box窗口生效
         mvprintw(offset_y + WORLD_HEIGHT / 2 - 3, offset_x + 9, "检测到最新数据异常,已自动归1 ");
         refresh();  //将虚拟屏幕上的内容写到显示屏上，并且刷新窗口
         Latest_Level = 1;//最高数据复位
         sleep(1);//等待1秒
     }
 
-    int i = 1, n = 0;
+//    游戏开始界面
+    int i = 1, n = 0; //为下面的文字的移动声明变量
     while ((ch = getch()) != 'b') {
-        wclear(PushBox);
-        mvprintw(offset_y + WORLD_HEIGHT / 2 - 8, offset_x + 18, "推箱子小游戏~");
-        mvprintw(offset_y + WORLD_HEIGHT / 2 - 1, offset_x + i + 6, "按B键开始游戏~");
-        mvprintw(1, offset_x + WORLD_HEIGHT / 2, "最新记录📝: %d，最高记录📝: %d", Latest_Level, Top_Level);
-        mvprintw(WORLD_HEIGHT - 3, offset_x + 10, "Copyright © ALL right reserved");
-        mvprintw(WORLD_HEIGHT - 1, offset_x + 16, "Powered By LanYun");
-        box(PushBox, 0, 0);
-        wrefresh(PushBox);
+        wclear(PushBox);//清空PushBox窗口
+        mvprintw(offset_y + WORLD_HEIGHT / 2 - 8, offset_x + 18, "推箱子小游戏~");//绘制界面
+        mvprintw(offset_y + WORLD_HEIGHT / 2 - 1, offset_x + i + 6, "按B键开始游戏~");//绘制界面
+        mvprintw(1, offset_x + WORLD_HEIGHT / 2, "上次记录📝: %d，最高记录📝: %d", Latest_Level, Top_Level);//绘制界面
+        mvprintw(WORLD_HEIGHT - 3, offset_x + 10, "Copyright © ALL right reserved");//绘制界面
+        mvprintw(WORLD_HEIGHT - 1, offset_x + 16, "Powered By LanYun");//绘制界面
+        box(PushBox, 0, 0);//创建box窗口
+        wrefresh(PushBox);//使box窗口生效
+        //文字移动
         if (offset_x + i < WORLD_WIDTH - 12 && n % 2 == 0) {
             i++;
         } else if (i > 1 && n % 2 != 0) {
@@ -146,6 +157,7 @@ void Init() {
             n++;
         } else {
         }
+        // 如果读取到q就退出
         if (ch == 'q') {
             check = -1;
             return;
@@ -153,64 +165,121 @@ void Init() {
     }
     box(PushBox, 0, 0);//创建box窗口
     wrefresh(PushBox);//使box窗口生效
-    mvprintw(1, offset_x + WORLD_HEIGHT / 2, "最新记录📝: %d，最高记录📝: %d", Latest_Level, Top_Level);
-    mvprintw(offset_y + WORLD_HEIGHT / 2 - 6, offset_x + 16, "请输入开始的关卡: %d", Latest_Level);
-    mvprintw(offset_y + WORLD_HEIGHT / 2 - 4, offset_x + 8, "(不可大于最高记录,默认最新记录开始)");
-    mvprintw(offset_y + WORLD_HEIGHT / 2 - 2, offset_x + 7, "(大于最高记录或小于0,将从最高记录开始)");
-    refresh();//将虚拟屏幕上的内容写到显示屏上，并且刷新窗口
-    Level = ((int) getchar() - 48);//读取关卡
+    mvprintw(1, offset_x + WORLD_HEIGHT / 2, "上次记录📝: %d，最高记录📝: %d", Latest_Level, Top_Level);//绘制界面
+    mvprintw(offset_y + WORLD_HEIGHT / 2 - 6, offset_x + 13, "请输入开始🎮的关卡: ");//绘制界面
+
+    // 获取输入的数字
+    int Digits = 0; //Total_Level的位数
+    int success; // 转换成功的标志
+    //读取Total_Level位数
+    for (long tmp = Total_Level; tmp; Digits++) {
+        tmp /= 10;//tmp每次去掉最低一位
+    }
+    char input[Digits]; // input字符串数组
+
+    do {
+        mvprintw(offset_y + WORLD_HEIGHT / 2 - 1, offset_x + 10, "输入游玩🎮关卡数后按回车即可 ");//绘制界面
+        mvprintw(offset_y + WORLD_HEIGHT / 2 + 4, offset_x + 8, "注意:输入需合法且不可高于最高记录 ");//绘制界面
+        mvprintw(offset_y + WORLD_HEIGHT / 2 + 6, offset_x + 9, "若输入数据大于最高记录📝或小于1 ");//绘制界面
+        mvprintw(offset_y + WORLD_HEIGHT / 2 + 8, offset_x + 10, "将自动采用最高纪录📝进行游玩 ");//绘制界面
+        refresh();//将虚拟屏幕上的内容写到显示屏上，并且刷新窗口
+        if (!fgets(input, Digits + 1, stdin)) //最多读取Digits+1个字符数，其中包括换行符，如果没有读取任何东西，返回值要么是指向str指针，要么是NULL。
+        {
+            box(PushBox, 0, 0);//创建box窗口
+            wrefresh(PushBox);//使box窗口生效
+            mvprintw(offset_y + WORLD_HEIGHT / 2 - 6, offset_x + 13, "请输入开始🎮的关卡: ");//绘制界面
+            mvprintw(offset_y + WORLD_HEIGHT / 2 - 4, offset_x + 13, "输入数据读取失败!");//绘制界面
+            mvprintw(offset_y + WORLD_HEIGHT / 2 - 2, offset_x + 16, "请在1秒后重试!");//绘制界面
+            refresh();//刷新窗口
+            sleep(1);//等待1秒
+            continue;
+        }
+        // 将输入转换为整数:
+        char *endptr;//定义endptr字符指针
+        errno = 0; // 重置错误
+        Level = strtol(input, &endptr, 10);//获取输入.并把数据附值给关卡.
+        /*endptr设置为指向第一个无法转换的字符。因此，您可以检查整个字符串是否已转换。
+         *base允许您指定您期望的数字中的任何base。大多数时候，这将是10，但在这里你可以给16来解析十六进制，或者给2来解析二进制。
+         *strtol()甚至设置errno，因此您可以检查数字是太小还是太大，无法转换。*/
+        if (errno == ERANGE || endptr == input) //ERANGE表示一个范围错误，它在输入参数超出数学函数定义的范围时发生，errno被设置为ERANGE || 没有读取任何字符
+        {
+            box(PushBox, 0, 0);//创建box窗口
+            wrefresh(PushBox);//使box窗口生效
+            mvprintw(offset_y + WORLD_HEIGHT / 2 - 6, offset_x + 13, "请输入开始🎮的关卡: ");//绘制界面
+            mvprintw(offset_y + WORLD_HEIGHT / 2 - 4, offset_x + 12, "输入有误,请在1秒后重新输入 ");//绘制界面
+            refresh();//将虚拟屏幕上的内容写到显示屏上，并且刷新窗口
+            sleep(1);//等待1秒
+            success = 0;//未获得有效数字
+        } else if (*endptr && (*endptr != '\n' && *endptr != '\r'))//*endptr既不是字符串的结尾也不是换行,所以我们没有转换*整个输入的内容
+        {
+            success = 0;//未获得有效数字
+        } else {
+            success = 1;//获得有效数字
+        }
+    } while (!success); // 重复,得到一个有效的数字.
+
     if (Level > Top_Level || Level < 1) {
         Level = Top_Level;
     }
-    mvprintw(offset_y + WORLD_HEIGHT / 2 - 6, offset_x + 16, "请输入开始的关卡: %d", Level);
+    mvprintw(offset_y + WORLD_HEIGHT / 2 - 6, offset_x + 12, "您即将开始🎮的关卡: %d", Level);
     refresh();//刷新窗口
+    sleep(1);//等待1秒
 }
 
 void game() {
+    Level_start = time(NULL);  //获取当前时间,单位为s
+
     Position *head = malloc(sizeof(Position));//创建一个头结点并分配内存
     Position *p = head;//声明一个指针指向头结点，用于遍历链表
-    p->x = 0;//头结点的x坐标为0
-    p->y = 0;//头结点的y坐标为0
+    p->x = -1;//头结点的x坐标为0
+    p->y = -1;//头结点的y坐标为0
     p->box_x = -1;//头结点的箱子x坐标为-1
     p->box_y = -1;//头结点的箱子y坐标为-1
     p->next = NULL;//设置下一个元素为空
 
     while (Level != (Total_Level + 1) && check != -1) {
-        p = Draw(p);
-        p = Move(head, p);
+        p = Draw(p);//绘制地图🗺️
+        p = Move(head, p);//人物移动函数
         if (!Remain_Box) {
-            Level++;
+            Level++;//关卡数加一
             free(head);//释放指针空间
             head = malloc(sizeof(Position));//头结点分配内存
-            win();
+            win();//关卡通过✅函数
+            Level_start = time(NULL);  //获取当前时间,单位为s
         }
     }
     free(head);//释放指针空间
 }
 
 Position *Draw(Position *p) {
+    //判断check是否为3，如果是就不再执行
+    if (check == 3)
+        return p;
+
+    //判断是否需要更新最高记录📝
+    if (Level > Top_Level)
+        Top_Level = Level;
+
     int offset_x = (COLS - WORLD_WIDTH) / 2;//计算窗口的x轴偏移量
     int offset_y = (LINES - WORLD_HEIGHT) / 2;//计算窗口的y轴偏移量
     Remain_Box = 0;
 
-    //关卡记录更新
-    Latest_Level = Level;
-    if (Level > Top_Level)
-        Top_Level = Level;
-
     box(PushBox, 0, 0);
     wrefresh(PushBox);
-    mvprintw(1, offset_x + WORLD_HEIGHT / 2, "最新记录📝: %d，最高记录📝: %d", Latest_Level, Top_Level);
+    mvprintw(1, offset_x + WORLD_HEIGHT / 2, "上次记录📝: %d，最高记录📝: %d", Latest_Level, Top_Level);//绘制界面
     mvprintw(offset_y + WORLD_HEIGHT / 2 - 9, offset_x + 15, "请输入小人移动方向:");//输入提示
     mvprintw(offset_y + WORLD_HEIGHT / 2 - 8, offset_x + 7, "(W:上,S:下,A:左,D:右,或者使用方向键)");//输入提示
     mvprintw(offset_y + WORLD_HEIGHT / 2 - 7, offset_x + 4, "(按Q可保存数据并退出,按Z可回到上一步,仅一次)");//输入提示
     mvprintw(offset_y + WORLD_HEIGHT / 2 + 5, offset_x + 7, "描述: ■ 代表墙 ♀ 代表小人 ∆ 代表箱子 ");//输入提示
     mvprintw(offset_y + WORLD_HEIGHT / 2 + 7, offset_x + 8, "▲ 代表目的地 ★ 代表箱子已到达目的地 ");//输入提示
 
+    //在未进入下一关之前,文件📃仅读取一次.
     while (Tmp != Level) {
         //读入地图，并将地图中的数字转换为字符，存入地图数组中，方便绘制。
         FILE *fp = fopen("map.txt", "r");//打开文件
         if (fp == NULL) {
+            box(PushBox, 0, 0);//创建box窗口
+            wrefresh(PushBox);//使box窗口生效
             mvprintw(offset_y + WORLD_HEIGHT / 2 - 6, offset_x + 10, "未能打开或不存在map.txt地图文件!");
             refresh();  //将虚拟屏幕上的内容写到显示屏上，并且刷新窗口
             sleep(1);//等待1秒
@@ -226,7 +295,6 @@ Position *Draw(Position *p) {
         Tmp = Level;
     }
 
-    wclear(PushBox);
     //绘制地图🗺️
     for (int i = 0; i < HEIGHT; i++) {
         for (int j = 0; j < WIDTH; j++) {
@@ -254,11 +322,12 @@ Position *Draw(Position *p) {
                     break;
             }
             //遍历到人的时候.
-            if (map[i][j] == 2) {
+            if (map[i][j] == 2 || map[i][j] == 6) {
                 //注意二维数组和数学中矩阵的对应.
-                p = add_position(p, j, i, -1, -1);
-                x = j;
-                y = i;
+                if (check != 1)
+                    p = add_position(p, j, i, -1, -1);
+                x = j;//x坐标
+                y = i;//y坐标
             }
             //未完成的箱子的数目
             if (map[i][j] == 3) {
@@ -271,70 +340,83 @@ Position *Draw(Position *p) {
 }
 
 Position *Move(Position *head, Position *p) {
+    int offset_x = (COLS - WORLD_WIDTH) / 2;//计算窗口的x轴偏移量
+
+    //如果剩下的箱子数目为0，则说明本关卡通过✅,不再读取键盘输入并退出.
     if (!Remain_Box) {
         return p;
     }
 
     int direction;//方向键
     Input:
+    Level_end = time(NULL);  //获取当前时间,单位为s
+    mvprintw(WORLD_HEIGHT + 2, offset_x + 8, "当前关卡为: %ld , 本关卡已游玩🎮: %.0lf 秒 ", Level,
+             difftime(Level_end, Level_start));//绘制界面,输出关卡号和游玩关卡时间
     direction = getch();//读取键盘输入
     //判断方向
-    if (direction == 'w' || direction == 'W' || direction == KEY_UP) {
-        moveUp(p);
-        return p;
-    } else if (direction == 's' || direction == 'S' || direction == KEY_DOWN) {
-        moveDown(p);
-        return p;
-    } else if (direction == 'a' || direction == 'A' || direction == KEY_LEFT) {
-        moveLeft(p);
-        return p;
-    } else if (direction == 'd' || direction == 'D' || direction == KEY_RIGHT) {
-        moveRight(p);
-        return p;
-    } else if (direction == 'q' || direction == 'Q' || direction == '\x1b') {
-        check = -1;
-        return p;
+    if (direction == 'w' || direction == 'W' || direction == KEY_UP) {//上
+        moveUp(p);//向上移动
+        check = 0;
+        return p;//返回当前位置
+    } else if (direction == 's' || direction == 'S' || direction == KEY_DOWN) {//下
+        moveDown(p);//向下移动
+        check = 0;
+        return p;//返回当前位置
+    } else if (direction == 'a' || direction == 'A' || direction == KEY_LEFT) {//左
+        moveLeft(p);//向左移动
+        check = 0;
+        return p;//返回当前位置
+    } else if (direction == 'd' || direction == 'D' || direction == KEY_RIGHT) {//右
+        moveRight(p);//向右移动
+        check = 0;
+        return p;//返回当前位置
+    } else if (direction == 'q' || direction == 'Q' || direction == '\x1b') {//退出
+        check = -1;//将check赋值为-1，然后退出
+        return p;//返回当前位置
     } else if (direction == 'z' || direction == 'Z') {
-        return moveBack(head, p);
+        if (check != 3) {
+            return moveBack(head, p);
+        } else goto Input;
     } else {
-        goto Input;
+        goto Input;//如果输入未知，则跳回去重新读取输入.
     }
 }
 
 void game_over() {
-    int offset_x = (COLS - WORLD_WIDTH) / 2;
-    int offset_y = (LINES - WORLD_HEIGHT) / 2;
+    int offset_x = (COLS - WORLD_WIDTH) / 2;//计算窗口的x轴偏移量
+    int offset_y = (LINES - WORLD_HEIGHT) / 2;//计算窗口的y轴偏移量
+
+    //关卡记录更新
+    Latest_Level = Level;
 
     refresh();  //将虚拟屏幕上的内容写到显示屏上，并且刷新窗口
     box(PushBox, 0, 0);//创建box窗口
     wrefresh(PushBox);//使box窗口生效
-    mvprintw(offset_y + WORLD_HEIGHT / 2 - 7, offset_x + WORLD_WIDTH / 2 - 8, "推箱子小游戏结束 ");
-    mvprintw(offset_y + WORLD_HEIGHT / 2 - 5, offset_x + WORLD_WIDTH / 2 - 15, "最新记录📝: %d  最高记录📝: %d", Latest_Level,
-             Top_Level);
-    FILE *fp = fopen("data.txt", "w");
-    if (fp == NULL) {
+    mvprintw(offset_y + WORLD_HEIGHT / 2 - 7, offset_x + WORLD_WIDTH / 2 - 8, "推箱子小游戏结束 ");//绘制游戏🎮结束界面
+    mvprintw(offset_y + WORLD_HEIGHT / 2 - 5, offset_x + WORLD_WIDTH / 2 - 15, "本次记录📝: %d  最高记录📝: %d", Latest_Level,
+             Top_Level);//绘制界面,输出本次游玩🎮的关卡数和最高关卡数
+    FILE *fp = fopen("data.txt", "w");//打开文件
+    if (fp == NULL) {//判断文件是否存在
         printf("打开data.txt文件失败！");
         exit(1);
     }
-    fprintf(fp, "Top_Level:%d\nLatest_Level:%d", Top_Level, Latest_Level);//此处，处在一处安全🔐性警告⚠️，但因无能修复而不得不使用。
-    fclose(fp);
-    mvprintw(offset_y + WORLD_HEIGHT / 2 - 3, offset_x + WORLD_WIDTH / 2 - 15, "数据保存成功！ 3秒后自动退出～ ");
-    mvprintw(WORLD_HEIGHT - 3, offset_x + 10, "Copyright © ALL right reserved");
-    mvprintw(WORLD_HEIGHT - 1, offset_x + 16, "Powered By LanYun");
+    fprintf(fp, "Top_Level:%ld\nLatest_Level:%ld", Top_Level, Latest_Level);//此处，处在一处安全🔐性警告⚠️，但因无能修复而不得不使用。
+    fclose(fp);//关闭文件
+    mvprintw(offset_y + WORLD_HEIGHT / 2 - 3, offset_x + WORLD_WIDTH / 2 - 15, "数据保存成功！ 3秒后自动退出～ ");//绘制界面
+    mvprintw(WORLD_HEIGHT - 3, offset_x + 10, "Copyright © ALL right reserved");//绘制界面
+    mvprintw(WORLD_HEIGHT - 1, offset_x + 16, "Powered By LanYun");//绘制界面
     refresh();  //将虚拟屏幕上的内容写到显示屏上，并且刷新窗口
     sleep(3);//等待3秒
-    delwin(PushBox);
-    endwin();
+    delwin(PushBox);//删除box窗口
+    endwin();//结束窗口
 }
 
 void win() {
-
-//    refresh();  //将虚拟屏幕上的内容写到显示屏上，并且刷新窗口
     box(PushBox, 0, 0);//创建box窗口
     wrefresh(PushBox);//使box窗口生效
-    int offset_x = (COLS - WORLD_WIDTH) / 2;
-    int offset_y = (LINES - WORLD_HEIGHT) / 2;
-    mvprintw(offset_y + WORLD_HEIGHT / 2, offset_x + WORLD_WIDTH / 2 - 15, "恭喜🎉通关！快进入下一关吧～👉 ");
+    int offset_x = (COLS - WORLD_WIDTH) / 2;//计算窗口的x轴偏移量
+    int offset_y = (LINES - WORLD_HEIGHT) / 2;//计算窗口的y轴偏移量
+    mvprintw(offset_y + WORLD_HEIGHT / 2, offset_x + WORLD_WIDTH / 2 - 15, "恭喜🎉通关！快进入下一关吧～👉 ");//绘制界面
     refresh();  //将虚拟屏幕上的内容写到显示屏上，并且刷新窗口
     sleep(1);//等待1秒
 }
@@ -625,7 +707,7 @@ void moveRight(Position *p) {
         int uux = x + 2;
         int uuy = y;
 
-        //箱子右面是墙
+        //箱子右面是墙,完成的箱子，箱子📦就返回
         if (map[uuy][uux] == 1 || map[uuy][uux] == 5 || map[uuy][uux] == 3) {
             return;
         }
@@ -665,61 +747,78 @@ Position *moveBack(Position *head, Position *p) {
     Position *tmp = head;
     Position *del = NULL;
 
-    while (tmp->next->next != NULL) {
+    int n = 0;//记录📝指针循环♻️次数
+
+    while (tmp->next->next != NULL) {//移动指针到倒数第二个
         tmp = tmp->next;
+        n++;
     }
-    del = tmp->next;
+
+    //判断步数是否有两步以上，如果有就不进行撤回
+    if (!n) {
+        free(del);
+
+        check = 3;//不可再进行撤回标识
+
+        return p;
+    }
+
+    del = tmp->next; //要删除的位置,即当前位置
     tmp->next = NULL;
-    p = tmp;
+    p = tmp; //要撤回到的位置
 
-    if ((p->box_x > 0) && (p->box_y > 0)) {
+    if ((p->box_x > 0) && (p->box_y > 0)) {   //如果人物移动前有箱子📦的话
         //撤回人物和撤回箱子📦移动，（顺带覆盖掉了人物）
-        if (map[del->y][del->x] == 6) {
-            map[del->y][del->x] = 5;
-        } else map[del->y][del->x] = 3;
-        map[p->y][p->x] = 2;
+//        if (map[del->y][del->x] == 6) {
+//            map[del->y][del->x] = 5;
+//        } else map[del->y][del->x] = 3;
+        //撤回人物的移动。
+        if (map[p->y][p->x] == 4) {//如果被撤回的位置是目的地
+            map[p->y][p->x] = 6;//是，则修改人人在目的地
+        } else map[p->y][p->x] = 2;//否，则修改为人的位置
 
-        //清除移动过的箱子📦
-        //判断移动方向
-        int x_ = del->x - p->x;//规定向右👉为正
-        int y_ = del->y - p->y;//规定向下👇为正
+        //下面👇的功能为判断移动方向，并清除移动过的箱子📦
+        int x_ = del->x - p->x;//规定向右👉为正，用于计算箱子📦被移动后的位置
+        int y_ = del->y - p->y;//规定向下👇为正，用于计算箱子📦被移动后的位置
 
-        if (map[p->box_y + y_][p->box_x + x_] == 5)
-            map[p->box_y + y_][p->box_x + x_] = 4;
-        else if (x_ != y_)
-            map[p->box_y + y_][p->box_x + x_] = 0;
+        //将箱子📦移动后的位置恢复为上次移动的状态
+        if (map[p->box_y + y_][p->box_x + x_] == 5)//判断将被撤回箱子📦的位置是否为为目的地
+            map[p->box_y + y_][p->box_x + x_] = 4;//是，则将被撤回的位置修改为目的地
+        else map[p->box_y + y_][p->box_x + x_] = 0;//如果不是，则修改为空
 
-    } else {
-        if (map[del->y][del->x] == 6) {
-            map[del->y][del->x] = 4;
-        } else map[del->y][del->x] = 0;
-        map[p->y][p->x] = 2;
+        //撤回箱子📦的移动
+        if (map[p->box_y][p->box_x] == 4)//判断箱子📦撤回到的位置是否为为目的地
+            map[p->box_y][p->box_x] = 5;//是，则将被撤回的位置修改为已完成✅的箱子📦
+        else map[p->box_y][p->box_x] = 3;//如果不是，则修改为箱子📦
+
+    } else {  //如果人物移动前没有箱子📦
+
+        //撤回人物的移动。
+        if (map[p->y][p->x] == 4) {//如果被撤回的位置是目的地
+            map[p->y][p->x] = 6;//是，则修改人人在目的地
+        } else map[p->y][p->x] = 2;//否，则修改为人的位置
+
+        //将人物移动后的位置恢复为上次移动的状态
+        if (map[del->y][del->x] == 6) {//如果被删除位置是目的地
+            map[del->y][del->x] = 4;//是，则将被删除的位置修改为目的地
+        } else map[del->y][del->x] = 0;//如果不是，则修改为空白
     }
 
     free(del);
 
+    check = 1;
+
     return p;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*  0  表示空
+    1  表示墙
+    2  表示人
+    3  表示箱子
+    4  表示目的地
+    5  表示已经完成的箱子
+    6  表示人在目的地
+    */
 
 
 
