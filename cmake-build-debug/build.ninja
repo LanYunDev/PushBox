@@ -72,70 +72,6 @@ build PushBox: C_EXECUTABLE_LINKER__PushBox_Debug CMakeFiles/PushBox.dir/main.c.
   TARGET_FILE = PushBox
   TARGET_PDB = PushBox.dbg
 
-# =============================================================================
-# Object build statements for EXECUTABLE target test
-
-
-#############################################
-# Order-only phony target for test
-
-build cmake_object_order_depends_target_test: phony || CMakeFiles/test.dir
-
-build CMakeFiles/test.dir/test.c.o: C_COMPILER__test_Debug /Users/lanyun/CLionProjects/PushBox/test.c || cmake_object_order_depends_target_test
-  DEP_FILE = CMakeFiles/test.dir/test.c.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -std=gnu2x
-  OBJECT_DIR = CMakeFiles/test.dir
-  OBJECT_FILE_DIR = CMakeFiles/test.dir
-
-
-# =============================================================================
-# Link build statements for EXECUTABLE target test
-
-
-#############################################
-# Link the executable test
-
-build test: C_EXECUTABLE_LINKER__test_Debug CMakeFiles/test.dir/test.c.o | /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/lib/libcurses.tbd
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk
-  LINK_LIBRARIES = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/lib/libcurses.tbd
-  OBJECT_DIR = CMakeFiles/test.dir
-  POST_BUILD = :
-  PRE_LINK = :
-  TARGET_FILE = test
-  TARGET_PDB = test.dbg
-
-# =============================================================================
-# Object build statements for EXECUTABLE target test2
-
-
-#############################################
-# Order-only phony target for test2
-
-build cmake_object_order_depends_target_test2: phony || CMakeFiles/test2.dir
-
-build CMakeFiles/test2.dir/test2.c.o: C_COMPILER__test2_Debug /Users/lanyun/CLionProjects/PushBox/test2.c || cmake_object_order_depends_target_test2
-  DEP_FILE = CMakeFiles/test2.dir/test2.c.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -std=gnu2x
-  OBJECT_DIR = CMakeFiles/test2.dir
-  OBJECT_FILE_DIR = CMakeFiles/test2.dir
-
-
-# =============================================================================
-# Link build statements for EXECUTABLE target test2
-
-
-#############################################
-# Link the executable test2
-
-build test2: C_EXECUTABLE_LINKER__test2_Debug CMakeFiles/test2.dir/test2.c.o | /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/lib/libcurses.tbd
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk
-  LINK_LIBRARIES = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/lib/libcurses.tbd
-  OBJECT_DIR = CMakeFiles/test2.dir
-  POST_BUILD = :
-  PRE_LINK = :
-  TARGET_FILE = test2
-  TARGET_PDB = test2.dbg
-
 
 #############################################
 # Utility command for edit_cache
@@ -170,7 +106,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 #############################################
 # Folder: /Users/lanyun/CLionProjects/PushBox/cmake-build-debug
 
-build all: phony PushBox test test2
+build all: phony PushBox
 
 # =============================================================================
 # Built-in targets

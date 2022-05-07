@@ -1,3 +1,6 @@
+//禁用fscanf的警告.因为在文件无误的情况下不存在问题，所以不需要警告.
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "cert-err34-c"
 //推箱子小游戏 Powered By LanYun
 #include <ncurses.h>//对于代码内容关于ncurses.h库那些函数不太明白可以看看我写的[这篇文章](https://lanyundev.vercel.app/posts/a5945d21.html)噢
 #include <stdlib.h>//声明了数值与字符串转换函数, 伪随机数生成函数, 动态内存分配函数, 进程控制函数等公共函数.
@@ -62,7 +65,7 @@ long Latest_Level = 1;//最新关卡
 long Total_Level = 14;//总关卡数
 long Remain_Box = 1;//剩余箱子数
 long Tmp = 0;//用于存储临时Level
-int check = 0;//退出标识的作用,及其检测是否有撤回操作
+int check;//退出标识的作用,及其检测是否有撤回操作
 int x, y;//玩家位置
 int ch;//获取输入内容
 time_t Level_start, Level_end;//记录关卡开始和结束时间
@@ -102,10 +105,10 @@ void Init() {
     FILE_FIX:
     sleep(0);//等待0秒
     FILE *fp = fopen("data.txt", "r");//只读打开data.txt文件📃
-    if (fp == NULL) {//如果打开失败
+    if (fp == NULL || check == 4) {//如果打开失败
         box(PushBox, 0, 0);//创建box窗口
         wrefresh(PushBox);//使box窗口生效
-        mvprintw(offset_y + WORLD_HEIGHT / 2 - 6, offset_x + 8, "未能打开或不存在data.txt数据文件!");
+        mvprintw(offset_y + WORLD_HEIGHT / 2 - 6, offset_x + 7, "未能打开或data.txt数据文件存在错误!");
         mvprintw(offset_y + WORLD_HEIGHT / 2 - 4, offset_x + 8, "尝试自动生成默认data.txt数据文件!");
         refresh();  //将虚拟屏幕上的内容写到显示屏上，并且刷新窗口
         fclose(fp);//关闭文件📃
@@ -116,8 +119,14 @@ void Init() {
         sleep(1);//等待1秒
         goto FILE_FIX;//重新回到只读打开
     }
-    fscanf(fp, "Top_Level:%ld Latest_Level:%ld", &Top_Level, &Latest_Level);//读取文件.⚠️：此处，处在一处安全🔐性警告⚠️，但因无能修复而不得不使用。
+    if (fscanf(fp, "Top_Level:%ld Latest_Level:%ld", &Top_Level, &Latest_Level) !=
+        2) {    //读取文件.⚠️：此处，处在一处安全🔐性警告⚠️，但因无能修复而不得不使用。
+        check = 4;//标志为文件📃需重新生成
+        goto FILE_FIX;
+    }
     fclose(fp);//关闭文件📃
+
+    check = 0;//check标志置零
 
     //检查最高数据是否异常
     if (Top_Level < 1 || Top_Level > Total_Level) {
@@ -278,9 +287,10 @@ Position *Draw(Position *p) {
         //读入地图，并将地图中的数字转换为字符，存入地图数组中，方便绘制。
         FILE *fp = fopen("map.txt", "r");//打开文件
         if (fp == NULL) {
+            FILE_Error:
             box(PushBox, 0, 0);//创建box窗口
             wrefresh(PushBox);//使box窗口生效
-            mvprintw(offset_y + WORLD_HEIGHT / 2 - 6, offset_x + 10, "未能打开或不存在map.txt地图文件!");
+            mvprintw(offset_y + WORLD_HEIGHT / 2 - 6, offset_x + 7, "未能打开或map.txt地图文件存在错误!");
             refresh();  //将虚拟屏幕上的内容写到显示屏上，并且刷新窗口
             sleep(1);//等待1秒
             exit(1);
@@ -288,7 +298,9 @@ Position *Draw(Position *p) {
         fseek(fp, (16L * 8 + 1) * (Level - 1), SEEK_SET);//移动文件指针
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
-                fscanf(fp, "%1d", &map[i][j]); //读取文件.⚠️：此处，处在一处安全🔐性警告⚠️，但因无能修复而不得不使用。
+                if (fscanf(fp, "%1d", &map[i][j]) != 1) {    //读取文件.⚠️：此处，处在一处安全🔐性警告⚠️，但因无能修复而不得不使用。
+                    goto FILE_Error;
+                }
             }
         }
         fclose(fp);//关闭文件
@@ -849,3 +861,5 @@ Position *moveBack(Position *head, Position *p) {
 
 
 
+
+#pragma clang diagnostic pop
