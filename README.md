@@ -1,4 +1,4 @@
-## 前言
+## 前言 Foreword
 
 这个是我学校工程实践的作业.作业采用C语言编写,语言标准C23,采用全程采用Clion作为我的IDE进行编写和调试.
 
@@ -12,7 +12,7 @@
 
 对于代码内容关于ncurses.h库那些函数不太明白可以看看我写的[这篇文章](https://lanyundev.vercel.app/posts/a5945d21.html)噢
 
-## 功能
+## 功能 Function
 
 目前实现的功能有:
 
@@ -29,18 +29,17 @@
 9. 关卡数和关卡游玩时间显示功能
 10. 等等…
 
-## 如何运行?
+## 如何运行? ⚙ How to run?
 
-前提:
+> 运行前提(先决)条件👇
+>
+> > 环境中有ncurses.h库,中文字体库及其一些特殊字符.
+> > 目前已知能够在Unix等Linux类OS下运行.Windows用户请自行测试(大概率不支持).
 
-环境中有ncurses.h库,中文字体库及其一些特殊字符.
-
-目前已知能够在Unix等Linux类OS下运行.Windows用户请自行测试(大概率不支持).
-
-在`main.c`目录下输入命令:
+在`PushBox.c`目录下输入命令:
 
 ```bash
-gcc main.c -o PushBox -lncurses
+gcc PushBox.c -o PushBox -lncurses
 ./PushBox
 ```
 
@@ -50,13 +49,15 @@ gcc main.c -o PushBox -lncurses
 
 ![v0.0.3-2022-05-07 00.10.53](README/v0.0.3-2022-05-07%2000.10.53.gif)
 
-## Todo
+## 🎉 Features
 
 我鸽了,欢迎大佬补充然后做.
 
-1. 自动寻路算法
-2. 无限回滚操作 已完成✅--本人实现
-3. 自动生成地图文件
-4. 优化代码及其性能
-5. 等等…
+- [x] 无限回滚操作
+- [ ] 自动寻路算法
+- [ ] 自动生成地图文件
+- [ ] 优化代码及其性能
+- [ ] 支持3D图形化显示
+- [ ] 支持Windows平台
+- [ ] 等等…
 
