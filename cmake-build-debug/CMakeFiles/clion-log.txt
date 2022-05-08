@@ -1,9 +1,4 @@
 /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -G Ninja -S /Users/lanyun/CLionProjects/PushBox -B /Users/lanyun/CLionProjects/PushBox/cmake-build-debug
-CMake Error at CMakeLists.txt:10 (target_link_libraries):
-  Cannot specify link libraries for target "PushBox" which is not built by
-  this project.
-
-
--- Configuring incomplete, errors occurred!
-See also "/Users/lanyun/CLionProjects/PushBox/cmake-build-debug/CMakeFiles/CMakeOutput.log".
-See also "/Users/lanyun/CLionProjects/PushBox/cmake-build-debug/CMakeFiles/CMakeError.log".
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/lanyun/CLionProjects/PushBox/cmake-build-debug
