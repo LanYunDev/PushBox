@@ -251,8 +251,10 @@ void game() {
         p = Move(head, p);//人物移动函数
         if (!Remain_Box) {
             Level++;//关卡数加一
+            p = NULL;//指针指向空指针
             free(head);//释放指针空间
             head = malloc(sizeof(Position));//头结点分配内存
+            p = head;//指针重新指向头结点，用于遍历链表
             win();//关卡通过✅函数
             Level_start = time(NULL);  //获取当前时间,单位为s
         }
