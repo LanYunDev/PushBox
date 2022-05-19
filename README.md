@@ -31,19 +31,56 @@
 
 ## 如何运行? ⚙ How to run?
 
-> 运行前提(先决)条件👇
->
-> > 环境中有ncurses.h库,中文字体库及其一些特殊字符.
-> > 目前已知能够在Unix等Linux类OS下运行.Windows用户请自行测试(大概率不支持).
+命令行终端进入`PushBox`目录后运行启动脚本(极力推荐):
 
-在`PushBox.c`目录下输入命令:
-
+**启动脚本命令:**
 ```bash
-gcc PushBox.c -o PushBox -lncurses
-./PushBox
+chmod +x 启动脚本.sh && ./启动脚本.sh
 ```
 
-然后就可以快乐地玩耍啦~
+若依然失败，请反馈相关信息以便本人能够排除问题并解决问题。
+
+<details>
+  <summary>点我查看以前写的关于运行的相关提示或说明</summary>
+
+   > 运行前提(先决)条件👇
+   >
+   > > 环境中有ncurses.h库,中文字体库及其一些特殊字符.
+   > > 目前已知能够在Unix等Linux类OS下运行.Windows用户请自行测试(大概率不支持).
+
+   由于本人不太会使用CMake，所以如果没有ncurses.h库，可参考如下命令安装:
+
+   ```bash
+   sudo apt install libncurses5-dev
+   ```
+
+   或者尝试编译安装ncurses.h库:
+
+   ```bash
+   cd include/ncurses-6.3 && ./configure && make && sudo make install
+   ```
+
+   命令行终端进入`PushBox`目录后输入命令或运行启动脚本(推荐):
+
+   ```bash
+   cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build --target all && mv build/PushBox src/ && cd src/ && ./PushBox
+   ```
+
+   如果没有Ninja生成器,可以去掉`-G Ninja`参数。
+
+   ```bash
+   cd src && gcc PushBox.c -o PushBox -lncurses && ./PushBox
+   ```
+
+   **启动脚本命令:**
+   ```bash
+   chmod +x 启动脚本.sh && ./启动脚本.sh
+   ```
+</details>
+
+如果成功启动，那就可以快乐地玩耍啦~
+
+<img src="README/image-20220519235819464.png" alt="image-20220519235819464" style="zoom:50%;" />
 
 游戏🎮游玩示例GIF图:
 

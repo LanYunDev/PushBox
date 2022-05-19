@@ -15,6 +15,9 @@
 ########################
 
 //Path to a program.
+CCACHE_PROGRAM:FILEPATH=/usr/bin/cc
+
+//Path to a program.
 CMAKE_ADDR2LINE:FILEPATH=CMAKE_ADDR2LINE-NOTFOUND
 
 //Path to a program.
@@ -116,13 +119,28 @@ CMAKE_OSX_DEPLOYMENT_TARGET:STRING=
 CMAKE_OSX_SYSROOT:PATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk
 
 //Value Computed by CMake
-CMAKE_PROJECT_DESCRIPTION:STATIC=
+CMAKE_PROJECT_DESCRIPTION:STATIC=免费，开源，推箱子小游戏.A Free, Open Source, PushBox Game.
 
 //Value Computed by CMake
-CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
+CMAKE_PROJECT_HOMEPAGE_URL:STATIC=https://github.com/LanYunDev/PushBox
 
 //Value Computed by CMake
 CMAKE_PROJECT_NAME:STATIC=PushBox
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION:STATIC=1.1.4
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_MAJOR:STATIC=1
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_MINOR:STATIC=1
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_PATCH:STATIC=4
+
+//Value Computed by CMake
+CMAKE_PROJECT_VERSION_TWEAK:STATIC=
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib

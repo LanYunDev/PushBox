@@ -17,7 +17,7 @@
 rule C_COMPILER__PushBox_Debug
   depfile = $DEP_FILE
   deps = gcc
-  command = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = /usr/bin/cc /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -25,7 +25,7 @@ rule C_COMPILER__PushBox_Debug
 # Rule for linking C executable.
 
 rule C_EXECUTABLE_LINKER__PushBox_Debug
-  command = $PRE_LINK && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $FLAGS -Wl,-search_paths_first -Wl,-headerpad_max_install_names $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD
+  command = $PRE_LINK && /usr/bin/cc /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $FLAGS -Wl,-search_paths_first -Wl,-headerpad_max_install_names $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD
   description = Linking C executable $TARGET_FILE
   restat = $RESTAT
 
@@ -44,6 +44,15 @@ rule CUSTOM_COMMAND
 rule RERUN_CMAKE
   command = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/lanyun/CLionProjects/PushBox -B/Users/lanyun/CLionProjects/PushBox/cmake-build-debug
   description = Re-running CMake...
+  generator = 1
+
+
+#############################################
+# Rule for re-checking globbed directories.
+
+rule VERIFY_GLOBS
+  command = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -P /Users/lanyun/CLionProjects/PushBox/cmake-build-debug/CMakeFiles/VerifyGlobs.cmake
+  description = Re-checking globbed directories...
   generator = 1
 
 
