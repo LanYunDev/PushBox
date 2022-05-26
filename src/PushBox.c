@@ -2,6 +2,7 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "cert-err34-c"
 //推箱子小游戏 Powered By LanYun
+//推箱子专业网站： http://sokoban.ws/
 #include <ncurses.h>//对于代码内容关于ncurses.h库那些函数不太明白可以看看我写的[这篇文章](https://lanyundev.vercel.app/posts/a5945d21.html)噢
 #include <stdlib.h>//声明了数值与字符串转换函数, 伪随机数生成函数, 动态内存分配函数, 进程控制函数等公共函数.
 #include <locale.h> // 定义了特定地域的设置，实际上为了让程序在不同地域下运行，需要在程序开始处调用setlocale()函数。
