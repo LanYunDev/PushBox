@@ -34,6 +34,7 @@
 命令行终端进入`PushBox`目录后运行启动脚本(极力推荐):
 
 **启动脚本命令:**
+
 ```bash
 chmod +x 启动脚本.sh && ./启动脚本.sh
 ```
@@ -43,39 +44,41 @@ chmod +x 启动脚本.sh && ./启动脚本.sh
 <details>
   <summary>点我查看以前写的关于运行的相关提示或说明</summary>
 
-   > 运行前提(先决)条件👇
-   >
-   > > 环境中有ncurses.h库,中文字体库及其一些特殊字符.
-   > > 目前已知能够在Unix等Linux类OS下运行.Windows用户请自行测试(大概率不支持).
+> 运行前提(先决)条件👇
+>
+> > 环境中有ncurses.h库,中文字体库及其一些特殊字符.
+> > 目前已知能够在Unix等Linux类OS下运行.Windows用户请自行测试(大概率不支持).
 
-   由于本人不太会使用CMake，所以如果没有ncurses.h库，可参考如下命令安装:
+由于本人不太会使用CMake，所以如果没有ncurses.h库，可参考如下命令安装:
 
    ```bash
    sudo apt install libncurses5-dev
    ```
 
-   或者尝试编译安装ncurses.h库:
+或者尝试编译安装ncurses.h库:
 
    ```bash
    cd include/ncurses-6.3 && ./configure && make && sudo make install
    ```
 
-   命令行终端进入`PushBox`目录后输入命令或运行启动脚本(推荐):
+命令行终端进入`PushBox`目录后输入命令或运行启动脚本(推荐):
 
    ```bash
    cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build --target all && mv build/PushBox src/ && cd src/ && ./PushBox
    ```
 
-   如果没有Ninja生成器,可以去掉`-G Ninja`参数。
+如果没有Ninja生成器,可以去掉`-G Ninja`参数。
 
    ```bash
    cd src && gcc PushBox.c -o PushBox -lncurses && ./PushBox
    ```
 
-   **启动脚本命令:**
+**启动脚本命令:**
+
    ```bash
    chmod +x 启动脚本.sh && ./启动脚本.sh
    ```
+
 </details>
 
 游戏🎮游玩示例GIF图:
@@ -87,8 +90,10 @@ chmod +x 启动脚本.sh && ./启动脚本.sh
 我鸽了,欢迎大佬补充然后做.
 
 - [x] 无限回滚操作
+- [x] 改进移动函数
 - [ ] 自动寻路算法
 - [x] 支持自动链接编译
+- [ ] 窗口大小自动调整
 - [ ] 自动生成地图文件
 - [ ] 优化代码及其性能
 - [ ] 支持3D图形化显示

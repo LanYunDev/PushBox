@@ -1,0 +1,3 @@
+﻿  game.cpp
+c:\users\tang\source\repos\pushbox\pushbox\game.cpp(270): warning C4715: “event”: 不是所有的控件路径都返回值
+  PUSHBOX.vcxproj -> C:\Users\Tang\source\repos\PUSHBOX\x64\Debug\PUSHBOX.exe

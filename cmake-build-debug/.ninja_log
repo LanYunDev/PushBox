@@ -1,0 +1,8 @@
+# ninja log v5
+13	72	1655717957335367504	build.ninja	a2a53b16bbd1279
+0	3	0	clean	3c8e6cc385ee00ba
+47	88	1653632774312343721	PushBox	c25aa43f49e56137
+1	7	0	/Users/lanyun/CLionProjects/PushBox/cmake-build-debug/CMakeFiles/cmake.verify_globs	d07596603db0af86
+0	47	1653632774270311653	CMakeFiles/PushBox.dir/src/PushBox.c.o	510c578cdcd5e472
+0	7	0	/Users/lanyun/CLionProjects/PushBox/cmake-build-debug/CMakeFiles/cmake.verify_globs	d07596603db0af86
+0	4	0	clean	3c8e6cc385ee00ba

@@ -47,7 +47,7 @@ file(GLOB SRC_FILES CONFIGURE_DEPENDS
         "${PROJECT_SOURCE_DIR}/src/*.h"
         ) #GLOB自动查找当前目录下指定拓展名的文件📃，实现批量添加源文件。添加CONFIGURE_DEPENDS选项，当添加新文件或源文件发生变化时，CMake会自动重新编译项目。
 
-add_executable(${CMAKE_PROJECT_NAME} ${SRC_FILES}) #可执行文件名为PushBox，源文件为PushBox.c
+add_executable(${CMAKE_PROJECT_NAME} ${SRC_FILES} include/PushBox.h) #可执行文件名为PushBox，源文件为PushBox.c
 
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin") #判断是否是Mac平台
     target_link_libraries(${CMAKE_PROJECT_NAME} ${CURSES_LIBRARY}) #链接Curses库

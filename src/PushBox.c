@@ -1,8 +1,7 @@
 //禁用fscanf的警告.因为在文件无误的情况下不存在问题，所以不需要警告.
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "cert-err34-c"
-//推箱子小游戏 Powered By LanYun
-//推箱子专业网站： http://sokoban.ws/
+//推箱子小游戏 Powered By LanYun  推箱子专业网站： http://sokoban.ws/
 #include <ncurses.h>//对于代码内容关于ncurses.h库那些函数不太明白可以看看我写的[这篇文章](https://lanyundev.vercel.app/posts/a5945d21.html)噢
 #include <stdlib.h>//声明了数值与字符串转换函数, 伪随机数生成函数, 动态内存分配函数, 进程控制函数等公共函数.
 #include <locale.h> // 定义了特定地域的设置，实际上为了让程序在不同地域下运行，需要在程序开始处调用setlocale()函数。
@@ -36,33 +35,13 @@ Position *add_position(Position *p, int x, int y, int box_x, int box_y) {//p为�
     return p;//返回新元素
 }
 
-void Init();//初始化函数
-
-void game();//游戏函数
-
-Position *Draw(Position *p);//绘制函数
-
-Position *Move(Position *head, Position *p);//移动函数
-
-void moveUp(Position *p);//向上移动函数
-
-void moveDown(Position *p);//向下移动函数
-
-void moveLeft(Position *p);//向左移动函数
-
-void moveRight(Position *p);//向右移动函数
-
-Position *moveBack(Position *head, Position *p);//回退函数
-
-void win();//完成一关✅函数
-
-void game_over();//游戏结束函数
+#include "../include/PushBox.h"//引入推箱子的头文件
 
 WINDOW *PushBox;//定义推箱子窗口
 
-long Level = 1;//当前关卡
-long Top_Level = 1;//最高关卡
-long Latest_Level = 1;//最新关卡
+long Level = 1;//初始化当前关卡
+long Top_Level = 1;//初始化最高关卡
+long Latest_Level = 1;//初始化最新关卡
 long Total_Level = 14;//总关卡数
 long Remain_Box = 1;//剩余箱子数
 long Tmp = 0;//用于存储临时Level
@@ -70,16 +49,6 @@ int check;//退出标识的作用,及其检测是否有撤回操作
 int x, y;//玩家位置
 int ch;//获取输入内容
 time_t Level_start, Level_end;//记录关卡开始和结束时间
-
-//定义地图数组,二维数组有两个维度,地图是二维的矩形;
-/*  0  表示空
-    1  表示墙
-    2  表示人
-    3  表示箱子
-    4  表示目的地
-    5  表示已经完成的箱子
-    6  表示人在目的地
-    */
 
 int map[HEIGHT][WIDTH] = {0};//地图数组
 
@@ -153,7 +122,7 @@ void Init() {
         wclear(PushBox);//清空PushBox窗口
         mvprintw(offset_y + WORLD_HEIGHT / 2 - 8, offset_x + 18, "推箱子小游戏~");//绘制界面
         mvprintw(offset_y + WORLD_HEIGHT / 2 - 1, offset_x + i + 6, "按B键开始游戏~");//绘制界面
-        mvprintw(1, offset_x + WORLD_HEIGHT / 2, "上次记录📝: %d，最高记录📝: %d", Latest_Level, Top_Level);//绘制界面
+        mvprintw(1, offset_x + WORLD_HEIGHT / 2, "上次记录📝: %ld，最高记录📝: %ld", Latest_Level, Top_Level);//绘制界面
         mvprintw(WORLD_HEIGHT - 3, offset_x + 10, "Copyright © ALL right reserved");//绘制界面
         mvprintw(WORLD_HEIGHT - 1, offset_x + 16, "Powered By LanYun");//绘制界面
         box(PushBox, 0, 0);//创建box窗口
@@ -175,7 +144,7 @@ void Init() {
     }
     box(PushBox, 0, 0);//创建box窗口
     wrefresh(PushBox);//使box窗口生效
-    mvprintw(1, offset_x + WORLD_HEIGHT / 2, "上次记录📝: %d，最高记录📝: %d", Latest_Level, Top_Level);//绘制界面
+    mvprintw(1, offset_x + WORLD_HEIGHT / 2, "上次记录📝: %ld，最高记录📝: %ld", Latest_Level, Top_Level);//绘制界面
     mvprintw(offset_y + WORLD_HEIGHT / 2 - 6, offset_x + 13, "请输入开始🎮的关卡: ");//绘制界面
 
     // 获取输入的数字
@@ -231,7 +200,7 @@ void Init() {
     if (Level > Top_Level || Level < 1) {
         Level = Top_Level;
     }
-    mvprintw(offset_y + WORLD_HEIGHT / 2 - 6, offset_x + 12, "您即将开始🎮的关卡: %d", Level);
+    mvprintw(offset_y + WORLD_HEIGHT / 2 - 6, offset_x + 12, "您即将开始🎮的关卡: %ld", Level);
     refresh();//刷新窗口
     sleep(1);//等待1秒
 }
@@ -278,7 +247,7 @@ Position *Draw(Position *p) {
 
     box(PushBox, 0, 0);
     wrefresh(PushBox);
-    mvprintw(1, offset_x + WORLD_HEIGHT / 2, "上次记录📝: %d，最高记录📝: %d", Latest_Level, Top_Level);//绘制界面
+    mvprintw(1, offset_x + WORLD_HEIGHT / 2, "上次记录📝: %ld，最高记录📝: %ld", Latest_Level, Top_Level);//绘制界面
     mvprintw(offset_y + WORLD_HEIGHT / 2 - 9, offset_x + 15, "请输入小人移动方向:");//输入提示
     mvprintw(offset_y + WORLD_HEIGHT / 2 - 8, offset_x + 7, "(W:上,S:下,A:左,D:右,或者使用方向键)");//输入提示
     mvprintw(offset_y + WORLD_HEIGHT / 2 - 7, offset_x + 4, "(按Q可保存数据并退出,按Z可回到上一步,仅一次)");//输入提示
@@ -356,6 +325,12 @@ Position *Draw(Position *p) {
 
 Position *Move(Position *head, Position *p) {
     int offset_x = (COLS - WORLD_WIDTH) / 2;//计算窗口的x轴偏移量
+    //定义变量存放人物上或下或左或右方的坐标.
+    int ux;
+    int uy;
+    //定义箱子上或下或左或右的一个位置的变量，不一定用得上
+    int uux;
+    int uuy;
 
     //如果剩下的箱子数目为0，则说明本关卡通过✅,不再读取键盘输入并退出.
     if (!Remain_Box) {
@@ -369,32 +344,106 @@ Position *Move(Position *head, Position *p) {
              difftime(Level_end, Level_start));//绘制界面,输出关卡号和游玩关卡时间
     direction = getch();//读取键盘输入
     //判断方向
-    if (direction == 'w' || direction == 'W' || direction == KEY_UP) {//上
-        moveUp(p);//向上移动
+    if (direction == 'w' || direction == 'W' || direction == KEY_UP) { //向上移动
+        ux = x;
+        uy = y - 1;
+        uux = x;
+        uuy = y - 2;
         check = 0;
-        return p;//返回当前位置
-    } else if (direction == 's' || direction == 'S' || direction == KEY_DOWN) {//下
-        moveDown(p);//向下移动
+    } else if (direction == 's' || direction == 'S' || direction == KEY_DOWN) { //向下移动
+        ux = x;
+        uy = y + 1;
+        uux = x;
+        uuy = y + 2;
         check = 0;
-        return p;//返回当前位置
-    } else if (direction == 'a' || direction == 'A' || direction == KEY_LEFT) {//左
-        moveLeft(p);//向左移动
+    } else if (direction == 'a' || direction == 'A' || direction == KEY_LEFT) { //向左移动
+        ux = x - 1;
+        uy = y;
+        uux = x - 2;
+        uuy = y;
         check = 0;
-        return p;//返回当前位置
-    } else if (direction == 'd' || direction == 'D' || direction == KEY_RIGHT) {//右
-        moveRight(p);//向右移动
+    } else if (direction == 'd' || direction == 'D' || direction == KEY_RIGHT) { //向右移动
+        ux = x + 1;
+        uy = y;
+        uux = x + 2;
+        uuy = y;
         check = 0;
-        return p;//返回当前位置
-    } else if (direction == 'q' || direction == 'Q' || direction == '\x1b') {//退出
+    } else if (direction == 'q' || direction == 'Q' || direction == '\x1b') { //退出游戏
         check = -1;//将check赋值为-1，然后退出
         return p;//返回当前位置
-    } else if (direction == 'z' || direction == 'Z') {
+    } else if (direction == 'z' || direction == 'Z') { //撤回一步
         if (check != 3) {
             return moveBack(head, p);
         } else goto Input;
     } else {
         goto Input;//如果输入未知，则跳回去重新读取输入.
     }
+
+    //人上或下或左或右面是墙
+    if (map[uy][ux] == 1) {
+        return p;
+    }
+
+    //人上或下或左或右面是空白
+    if (map[uy][ux] == 0) {
+        if (map[y][x] == 6) {
+            map[y][x] = 4;
+        } else map[y][x] = 0;
+        map[uy][ux] = 2;
+        //更新人的坐标
+        y = uy;
+        return p;
+    }
+
+    //人上或下或左或右面是目的地
+    if (map[uy][ux] == 4) {
+        if (map[y][x] == 6) {
+            map[y][x] = 4;
+        } else map[y][x] = 0;
+        map[uy][ux] = 6;
+        //更新人的坐标
+        y = uy;
+        return p;
+    }
+
+    //人上或下或左或右面是箱子
+    if ((map[uy][ux] == 3) || (map[uy][ux] == 5)) {
+
+        //箱子上或下或左或右面是墙
+        if (map[uuy][uux] == 1 || map[uuy][uux] == 5 || map[uuy][uux] == 3) {
+            return p;
+        }
+
+        //箱子位置记录📝
+        p->box_x = ux;
+        p->box_y = uy;
+
+        //箱子上或下或左或右面是空白或者箱子上或下或左或右面是终点
+        //更新map
+        if (map[y][x] == 6) {
+            map[y][x] = 4;
+        } else map[y][x] = 0;
+        if (map[uy][ux] == 5) {
+            map[uy][ux] = 6;
+        } else map[uy][ux] = 2;
+        //更新人的坐标
+        y = uy;
+
+        //箱子上或下或左或右面是空白
+        if (map[uuy][uux] == 0) {
+            map[uuy][uux] = 3;
+            return p;
+        }
+
+        //箱子上或下或左或右面是终点
+        if (map[uuy][uux] == 4) {
+            map[uuy][uux] = 5;
+            return p;
+        }
+
+    }
+
+    return p;//返回当前位置
 }
 
 void game_over() {
@@ -408,7 +457,7 @@ void game_over() {
     box(PushBox, 0, 0);//创建box窗口
     wrefresh(PushBox);//使box窗口生效
     mvprintw(offset_y + WORLD_HEIGHT / 2 - 7, offset_x + WORLD_WIDTH / 2 - 8, "推箱子小游戏结束 ");//绘制游戏🎮结束界面
-    mvprintw(offset_y + WORLD_HEIGHT / 2 - 5, offset_x + WORLD_WIDTH / 2 - 15, "本次记录📝: %d  最高记录📝: %d", Latest_Level,
+    mvprintw(offset_y + WORLD_HEIGHT / 2 - 5, offset_x + WORLD_WIDTH / 2 - 15, "本次记录📝: %ld  最高记录📝: %ld", Latest_Level,
              Top_Level);//绘制界面,输出本次游玩🎮的关卡数和最高关卡数
     FILE *fp = fopen("data.txt", "w");//打开文件
     if (fp == NULL) {//判断文件是否存在
@@ -436,337 +485,7 @@ void win() {
     sleep(1);//等待1秒
 }
 
-//向上移动
-/**
- * 向上移动有几种情况.
- * 1、人上面为空白.
- *    这种情况有两步
- *    (1)将人当前位置设为空白  (0)
- *    (2)将人上面的那个位置设置为人  (2)
- * 2、人上面为箱子
- *    这种情况分3种情况.
- *    1、箱子上面为空白
- *        将人当前位置设为空白    (0)
- *        将箱子的位置设为人      (2)
- *        将箱子上面的空白设为未完成的箱子  (3)
- *    2、箱子上面是墙
- *        推不动,不做任何处理.
- *    3、箱子上面是终点
- *        将人的位置设为空白    (0)
- *        将箱子的位置设为人    (2)
- *        将终点的位置设为已经完成的箱子  (5)
- *        //箱子数减少1          Box--
- *     4、人上面是目的地
- * 3、人上面是墙
- *          不用处理.
- * 4、人上面是已经完成的箱子-----在2里面包括了
- *            不处理-------
- *
- */
-
-//每次操作后只考虑能不能移动;能, 移动;不能, 不操作;
-//每次循环都去获取人和未完成箱子的数据.----判断游戏是否退出
-
-void moveUp(Position *p) {
-    //定义变量存放人物上方的坐标.
-    int ux = x;
-    int uy = y - 1;
-
-    //人上面是墙
-    if (map[uy][ux] == 1) {
-        return;
-    }
-
-    //人上面是空白
-    if (map[uy][ux] == 0) {
-        if (map[y][x] == 6) {
-            map[y][x] = 4;
-        } else map[y][x] = 0;
-        map[uy][ux] = 2;
-        //更新人的坐标
-        y = uy;
-        return;
-    }
-
-    //人上面是目的地
-    if (map[uy][ux] == 4) {
-        if (map[y][x] == 6) {
-            map[y][x] = 4;
-        } else map[y][x] = 0;
-        map[uy][ux] = 6;
-        //更新人的坐标
-        y = uy;
-        return;
-    }
-
-    //人上面是箱子
-    if ((map[uy][ux] == 3) || (map[uy][ux] == 5)) {
-        //箱子的上一个位置
-        int uux = x;
-        int uuy = y - 2;
-
-        //箱子上面是墙
-        if (map[uuy][uux] == 1 || map[uuy][uux] == 5 || map[uuy][uux] == 3) {
-            return;
-        }
-
-        //箱子位置记录📝
-        p->box_x = ux;
-        p->box_y = uy;
-
-        //箱子上面是空白或者箱子上面是终点
-        //更新map
-        if (map[y][x] == 6) {
-            map[y][x] = 4;
-        } else map[y][x] = 0;
-        if (map[uy][ux] == 5) {
-            map[uy][ux] = 6;
-        } else map[uy][ux] = 2;
-        //更新人的坐标
-        y = uy;
-
-        //箱子上面是空白
-        if (map[uuy][uux] == 0) {
-            map[uuy][uux] = 3;
-            return;
-        }
-
-        //箱子上面是终点
-        if (map[uuy][uux] == 4) {
-            map[uuy][uux] = 5;
-            return;
-        }
-
-    }
-}
-
-//向下移动
-void moveDown(Position *p) {
-    //定义变量存放人物下方的坐标.
-    int ux = x;
-    int uy = y + 1;
-
-    //人下面是墙
-    if (map[uy][ux] == 1) {
-        return;
-    }
-
-    //人下面是空白
-    if (map[uy][ux] == 0) {
-        if (map[y][x] == 6) {
-            map[y][x] = 4;
-        } else map[y][x] = 0;
-        map[uy][ux] = 2;
-        //更新人的坐标
-        y = uy;
-        return;
-    }
-
-    //人下面是目的地
-    if (map[uy][ux] == 4) {
-        if (map[y][x] == 6) {
-            map[y][x] = 4;
-        } else map[y][x] = 0;
-        map[uy][ux] = 6;
-        //更新人的坐标
-        y = uy;
-        return;
-    }
-
-    //人下面是箱子
-    if (map[uy][ux] == 3 || map[uy][ux] == 5) {
-        //箱子的下一个位置
-        int uux = x;
-        int uuy = y + 2;
-
-        //箱子下面是墙
-        if (map[uuy][uux] == 1 || map[uuy][uux] == 5 || map[uuy][uux] == 3) {
-            return;
-        }
-
-        //箱子位置记录📝
-        p->box_x = ux;
-        p->box_y = uy;
-
-        //箱子下面是空白或终点
-        //更新map
-        if (map[y][x] == 6) {
-            map[y][x] = 4;
-        } else map[y][x] = 0;
-        if (map[uy][ux] == 5) {
-            map[uy][ux] = 6;
-        } else map[uy][ux] = 2;
-        //更新人的坐标
-        y = uy;
-
-        //箱子下面是空白
-        if (map[uuy][uux] == 0) {
-            map[uuy][uux] = 3;
-            return;
-        }
-
-        //箱子下面是终点
-        if (map[uuy][uux] == 4) {
-            map[uuy][uux] = 5;
-            return;
-        }
-
-    }
-
-}
-
-//向左移动
-void moveLeft(Position *p) {
-    //定义变量存放人物左方的坐标.
-    int ux = x - 1;
-    int uy = y;
-
-    //人左面是墙
-    if (map[uy][ux] == 1) {
-        return;
-    }
-
-    //人左面是空白
-    if (map[uy][ux] == 0) {
-        if (map[y][x] == 6) {
-            map[y][x] = 4;
-        } else map[y][x] = 0;
-        map[uy][ux] = 2;
-        //更新人的坐标
-        x = ux;
-        return;
-    }
-
-    //人左面是目的地
-    if (map[uy][ux] == 4) {
-        if (map[y][x] == 6) {
-            map[y][x] = 4;
-        } else map[y][x] = 0;
-        map[uy][ux] = 6;
-        //更新人的坐标
-        x = ux;
-        return;
-    }
-
-    //人左面是箱子
-    if (map[uy][ux] == 3 || map[uy][ux] == 5) {
-        //箱子的左一个位置
-        int uux = x - 2;
-        int uuy = y;
-
-        //箱子左面是墙或箱子
-        if (map[uuy][uux] == 1 || map[uuy][uux] == 5 || map[uuy][uux] == 3) {
-            return;
-        }
-
-        //箱子位置记录📝
-        p->box_x = ux;
-        p->box_y = uy;
-
-        //箱子左面是空白或终点
-        //更新map
-        if (map[y][x] == 6) {
-            map[y][x] = 4;
-        } else map[y][x] = 0;
-        if (map[uy][ux] == 5) {
-            map[uy][ux] = 6;
-        } else map[uy][ux] = 2;
-        //更新人的坐标
-        x = ux;
-
-        //箱子左面是空白
-        if (map[uuy][uux] == 0) {
-            map[uuy][uux] = 3;
-            return;
-        }
-
-        //箱子左面是终点
-        if (map[uuy][uux] == 4) {
-            map[uuy][uux] = 5;
-            return;
-        }
-
-    }
-
-}
-
-//向右移动
-void moveRight(Position *p) {
-    //定义变量存放人物右方的坐标.
-    int ux = x + 1;
-    int uy = y;
-
-    //人右面是墙
-    if (map[uy][ux] == 1) {
-        return;
-    }
-
-    //人右面是空白
-    if (map[uy][ux] == 0) {
-        if (map[y][x] == 6) {
-            map[y][x] = 4;
-        } else map[y][x] = 0;
-        map[uy][ux] = 2;
-        //更新人的坐标
-        x = ux;
-        return;
-    }
-
-    //人右面是目的地
-    if (map[uy][ux] == 4) {
-        if (map[y][x] == 6) {
-            map[y][x] = 4;
-        } else map[y][x] = 0;
-        map[uy][ux] = 6;
-        //更新人的坐标
-        x = ux;
-        return;
-    }
-
-    //人右面是箱子
-    if (map[uy][ux] == 3 || map[uy][ux] == 5) {
-
-        //箱子的下一个位置
-        int uux = x + 2;
-        int uuy = y;
-
-        //箱子右面是墙,完成的箱子，箱子📦就返回
-        if (map[uuy][uux] == 1 || map[uuy][uux] == 5 || map[uuy][uux] == 3) {
-            return;
-        }
-
-        //箱子位置记录📝
-        p->box_x = ux;
-        p->box_y = uy;
-
-        //箱子右面是空白或终点
-        //更新map
-        if (map[y][x] == 6) {
-            map[y][x] = 4;
-        } else map[y][x] = 0;
-        if (map[uy][ux] == 5) {
-            map[uy][ux] = 6;
-        } else map[uy][ux] = 2;
-        //更新人的坐标
-        x = ux;
-
-        //箱子右面是空白
-        if (map[uuy][uux] == 0) {
-            map[uuy][uux] = 3;
-            return;
-        }
-
-        //箱子右面是终点
-        if (map[uuy][uux] == 4) {
-            map[uuy][uux] = 5;
-            return;
-        }
-
-    }
-}
-
-//撤回移动
-Position *moveBack(Position *head, Position *p) {
+Position *moveBack(Position *head, Position *p) { //撤回移动
     Position *tmp = head;
     Position *del = NULL;
 
@@ -839,6 +558,11 @@ Position *moveBack(Position *head, Position *p) {
     return p;
 }
 
+#pragma clang diagnostic pop
+
+//说明
+
+//定义地图数组,二维数组有两个维度,地图是二维的矩形;
 /*  0  表示空
     1  表示墙
     2  表示人
@@ -848,25 +572,36 @@ Position *moveBack(Position *head, Position *p) {
     6  表示人在目的地
     */
 
-//Todo
+//向上移动
+/**
+ * 向上移动有几种情况.
+ * 1、人上面为空白.
+ *    这种情况有两步
+ *    (1)将人当前位置设为空白  (0)
+ *    (2)将人上面的那个位置设置为人  (2)
+ * 2、人上面为箱子
+ *    这种情况分3种情况.
+ *    1、箱子上面为空白
+ *        将人当前位置设为空白    (0)
+ *        将箱子的位置设为人      (2)
+ *        将箱子上面的空白设为未完成的箱子  (3)
+ *    2、箱子上面是墙
+ *        推不动,不做任何处理.
+ *    3、箱子上面是终点
+ *        将人的位置设为空白    (0)
+ *        将箱子的位置设为人    (2)
+ *        将终点的位置设为已经完成的箱子  (5)
+ *        //箱子数减少1          Box--
+ *     4、人上面是目的地
+ * 3、人上面是墙
+ *          不用处理.
+ * 4、人上面是已经完成的箱子-----在2里面包括了
+ *            不处理-------
+ *
+ */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#pragma clang diagnostic pop
-
+//每次操作后只考虑能不能移动;能, 移动;不能, 不操作;
+//每次循环都去获取人和未完成箱子的数据.----判断游戏是否退出
 
 /*代码保护*/
 // 程序出Bug了？

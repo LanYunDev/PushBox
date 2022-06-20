@@ -51,7 +51,8 @@ build cmake_object_order_depends_target_PushBox: phony || CMakeFiles/PushBox.dir
 
 build CMakeFiles/PushBox.dir/src/PushBox.c.o: C_COMPILER__PushBox_Debug /Users/lanyun/CLionProjects/PushBox/src/PushBox.c || cmake_object_order_depends_target_PushBox
   DEP_FILE = CMakeFiles/PushBox.dir/src/PushBox.c.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -std=gnu2x
+  FLAGS = -arch arm64 -std=gnu2x
+  INCLUDES = -I/opt/local/include
   OBJECT_DIR = CMakeFiles/PushBox.dir
   OBJECT_FILE_DIR = CMakeFiles/PushBox.dir/src
 
@@ -63,9 +64,9 @@ build CMakeFiles/PushBox.dir/src/PushBox.c.o: C_COMPILER__PushBox_Debug /Users/l
 #############################################
 # Link the executable PushBox
 
-build PushBox: C_EXECUTABLE_LINKER__PushBox_Debug CMakeFiles/PushBox.dir/src/PushBox.c.o | /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/lib/libcurses.tbd
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk
-  LINK_LIBRARIES = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/lib/libcurses.tbd
+build PushBox: C_EXECUTABLE_LINKER__PushBox_Debug CMakeFiles/PushBox.dir/src/PushBox.c.o | /opt/local/lib/libcurses.dylib
+  FLAGS = -arch arm64
+  LINK_LIBRARIES = /opt/local/lib/libcurses.dylib
   OBJECT_DIR = CMakeFiles/PushBox.dir
   POST_BUILD = :
   PRE_LINK = :
