@@ -11,8 +11,7 @@
 		"commands" : 
 		[
 			"add_executable",
-			"target_link_libraries",
-			"include_directories"
+			"target_link_libraries"
 		],
 		"files" : 
 		[
@@ -26,19 +25,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 50,
+				"line" : 52,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 53,
-				"parent" : 0
-			},
-			{
-				"command" : 2,
-				"file" : 0,
-				"line" : 42,
+				"line" : 55,
 				"parent" : 0
 			}
 		]
@@ -49,20 +42,13 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : " -arch arm64"
+					"fragment" : "-g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk"
 				},
 				{
-					"fragment" : "-std=gnu2x"
+					"fragment" : "-std=gnu++2a"
 				}
 			],
-			"includes" : 
-			[
-				{
-					"backtrace" : 3,
-					"path" : "/opt/local/include"
-				}
-			],
-			"language" : "C",
+			"language" : "CXX",
 			"languageStandard" : 
 			{
 				"backtraces" : 
@@ -83,16 +69,20 @@
 		"commandFragments" : 
 		[
 			{
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
 				"fragment" : "",
 				"role" : "flags"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "/opt/local/lib/libcurses.dylib",
+				"fragment" : "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/lib/libcurses.tbd",
 				"role" : "libraries"
 			}
 		],
-		"language" : "C"
+		"language" : "CXX"
 	},
 	"name" : "PushBox",
 	"nameOnDisk" : "PushBox",
@@ -123,7 +113,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/PushBox.c",
+			"path" : "src/PushBox.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

@@ -43,7 +43,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/ar"
+			"value" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar"
 		},
 		{
 			"name" : "CMAKE_BUILD_TYPE",
@@ -142,7 +142,7 @@
 			"value" : "/Applications/CLion.app/Contents/bin/cmake/mac/bin/ctest"
 		},
 		{
-			"name" : "CMAKE_C_COMPILER",
+			"name" : "CMAKE_CXX_COMPILER",
 			"properties" : 
 			[
 				{
@@ -151,14 +151,14 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "C compiler"
+					"value" : "CXX compiler"
 				}
 			],
-			"type" : "STRING",
-			"value" : "/usr/bin/cc"
+			"type" : "FILEPATH",
+			"value" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++"
 		},
 		{
-			"name" : "CMAKE_C_FLAGS",
+			"name" : "CMAKE_CXX_FLAGS",
 			"properties" : 
 			[
 				{
@@ -167,14 +167,14 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "Flags used by the C compiler during all build types."
+					"value" : "Flags used by the CXX compiler during all build types."
 				}
 			],
 			"type" : "STRING",
 			"value" : ""
 		},
 		{
-			"name" : "CMAKE_C_FLAGS_DEBUG",
+			"name" : "CMAKE_CXX_FLAGS_DEBUG",
 			"properties" : 
 			[
 				{
@@ -183,14 +183,14 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "Flags used by the C compiler during DEBUG builds."
+					"value" : "Flags used by the CXX compiler during DEBUG builds."
 				}
 			],
 			"type" : "STRING",
-			"value" : ""
+			"value" : "-g"
 		},
 		{
-			"name" : "CMAKE_C_FLAGS_MINSIZEREL",
+			"name" : "CMAKE_CXX_FLAGS_MINSIZEREL",
 			"properties" : 
 			[
 				{
@@ -199,14 +199,14 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "Flags used by the C compiler during MINSIZEREL builds."
+					"value" : "Flags used by the CXX compiler during MINSIZEREL builds."
 				}
 			],
 			"type" : "STRING",
-			"value" : ""
+			"value" : "-Os -DNDEBUG"
 		},
 		{
-			"name" : "CMAKE_C_FLAGS_RELEASE",
+			"name" : "CMAKE_CXX_FLAGS_RELEASE",
 			"properties" : 
 			[
 				{
@@ -215,14 +215,14 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "Flags used by the C compiler during RELEASE builds."
+					"value" : "Flags used by the CXX compiler during RELEASE builds."
 				}
 			],
 			"type" : "STRING",
-			"value" : ""
+			"value" : "-O3 -DNDEBUG"
 		},
 		{
-			"name" : "CMAKE_C_FLAGS_RELWITHDEBINFO",
+			"name" : "CMAKE_CXX_FLAGS_RELWITHDEBINFO",
 			"properties" : 
 			[
 				{
@@ -231,11 +231,11 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "Flags used by the C compiler during RELWITHDEBINFO builds."
+					"value" : "Flags used by the CXX compiler during RELWITHDEBINFO builds."
 				}
 			],
 			"type" : "STRING",
-			"value" : ""
+			"value" : "-O2 -g -DNDEBUG"
 		},
 		{
 			"name" : "CMAKE_DLLTOOL",
@@ -263,7 +263,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "Unknown"
+			"value" : "MACHO"
 		},
 		{
 			"name" : "CMAKE_EXE_LINKER_FLAGS",
@@ -475,7 +475,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/ld"
+			"value" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld"
 		},
 		{
 			"name" : "CMAKE_MAKE_PROGRAM",
@@ -583,7 +583,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/nm"
+			"value" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/nm"
 		},
 		{
 			"name" : "CMAKE_NUMBER_OF_MAKEFILES",
@@ -627,7 +627,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/objdump"
+			"value" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/objdump"
 		},
 		{
 			"name" : "CMAKE_OSX_ARCHITECTURES",
@@ -662,8 +662,8 @@
 					"value" : "The product will be built against the headers and libraries located inside the indicated SDK."
 				}
 			],
-			"type" : "STRING",
-			"value" : ""
+			"type" : "PATH",
+			"value" : "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk"
 		},
 		{
 			"name" : "CMAKE_PLATFORM_INFO_INITIALIZED",
@@ -723,7 +723,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "1.1.4"
+			"value" : "1.2.3"
 		},
 		{
 			"name" : "CMAKE_PROJECT_VERSION_MAJOR",
@@ -747,7 +747,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "1"
+			"value" : "2"
 		},
 		{
 			"name" : "CMAKE_PROJECT_VERSION_PATCH",
@@ -759,7 +759,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "4"
+			"value" : "3"
 		},
 		{
 			"name" : "CMAKE_PROJECT_VERSION_TWEAK",
@@ -787,7 +787,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/ranlib"
+			"value" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib"
 		},
 		{
 			"name" : "CMAKE_READELF",
@@ -1023,7 +1023,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/strip"
+			"value" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip"
 		},
 		{
 			"name" : "CMAKE_UNAME",
@@ -1067,7 +1067,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/opt/local/lib/libcurses.dylib"
+			"value" : "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/lib/libcurses.tbd"
 		},
 		{
 			"name" : "CURSES_FORM_LIBRARY",
@@ -1083,7 +1083,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/opt/local/lib/libform.dylib"
+			"value" : "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/lib/libform.tbd"
 		},
 		{
 			"name" : "CURSES_INCLUDE_PATH",
@@ -1099,7 +1099,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "/opt/local/include"
+			"value" : "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include"
 		},
 		{
 			"name" : "CURSES_NCURSES_LIBRARY",
@@ -1115,7 +1115,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/opt/local/lib/libncurses.dylib"
+			"value" : "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/lib/libncurses.tbd"
 		},
 		{
 			"name" : "FIND_PACKAGE_MESSAGE_DETAILS_Curses",
@@ -1127,7 +1127,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "[/opt/local/lib/libcurses.dylib][/opt/local/include][v()]"
+			"value" : "[/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/lib/libcurses.tbd][/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include][v()]"
 		},
 		{
 			"name" : "NCURSES_CFLAGS",

@@ -18,6 +18,10 @@
 #		exit 0
 #	fi
 #fi
+
+if [[ ! -d "build" ]]; then
+#判断是否存在build文件夹
+
 Catalog=$(dirname $(readlink -f "$0"))
 # 检测CMake是否存在,若不存在就安装
 if ! command -v cmake >/dev/null 2>&1; then
@@ -170,7 +174,7 @@ else
 fi
 
 cd $Catalog
-if [[ ! -d "build" ]]; then
+#if [[ ! -d "build" ]]; then
 	cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 	cmake --build build --target all
 	mv build/PushBox src/

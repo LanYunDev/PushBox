@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.22) #设置CMake的最低版本
 
 project(PushBox
-        LANGUAGES C
-        VERSION 1.1.4
+        LANGUAGES CXX
+        VERSION 1.2.3
         DESCRIPTION "免费，开源，推箱子小游戏.A Free, Open Source, PushBox Game."
         HOMEPAGE_URL https://github.com/LanYunDev/PushBox
         ) #设置项目名称,语言类型，项目版本号,项目描述，项目主页。
@@ -33,10 +33,11 @@ if (NOT DEFINED BUILD_SHARED_LIBS) #判断是否定义变量BUILD_SHARED_LIBS
     set(BUILD_SHARED_LIBS ON) #如果没有，则设置为ON
 endif () #结束
 
-set(CMAKE_C_STANDARD 23) #设置C语言标准为C 23
-set(CMAKE_C_STANDARD_REQUIRED ON) #编译器必须支持C 23，否则出错
-set(CMAKE_C_EXTENSIONS ON) #开启GCC编译器对C语言扩展，只支持GCC编译器，降低对(Windows平台的)MSVC的兼容性
+set(CMAKE_CXX_STANDARD 23) #设置C++语言标准为C++23
+#set(CMAKE_CXX_STANDARD_REQUIRED ON) #编译器必须支持C++23，否则出错
+set(CMAKE_CXX_EXTENSIONS ON) #开启GCC编译器对C语言扩展，只支持GCC编译器，降低对(Windows平台的)MSVC的兼容性
 
+# 在本机查找依赖
 find_package(Curses REQUIRED) #查找Curses库
 
 include_directories(${CURSES_INCLUDE_DIR}) #添加Curses库的头文件目录
@@ -46,8 +47,9 @@ file(GLOB SRC_FILES CONFIGURE_DEPENDS
         "${PROJECT_SOURCE_DIR}/src/*.c"
         "${PROJECT_SOURCE_DIR}/src/*.h"
         ) #GLOB自动查找当前目录下指定拓展名的文件📃，实现批量添加源文件。添加CONFIGURE_DEPENDS选项，当添加新文件或源文件发生变化时，CMake会自动重新编译项目。
+#${SRC_FILES}
 
-add_executable(${CMAKE_PROJECT_NAME} ${SRC_FILES} include/PushBox.h) #可执行文件名为PushBox，源文件为PushBox.c
+add_executable(${CMAKE_PROJECT_NAME} src/PushBox.cpp include/PushBox.h) #可执行文件名为PushBox，源文件为PushBox.c
 
 if (CMAKE_SYSTEM_NAME MATCHES "Darwin") #判断是否是Mac平台
     target_link_libraries(${CMAKE_PROJECT_NAME} ${CURSES_LIBRARY}) #链接Curses库

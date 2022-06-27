@@ -1,6 +1,6 @@
 ## 前言 Foreword
 
-这个是我学校工程实践的作业.作业采用C语言编写,语言标准C23,采用全程采用Clion作为我的IDE进行编写和调试.
+这个是我学校工程实践的作业.作业采用C++语言编写,语言标准C++23,采用全程采用Clion作为我的IDE进行编写和调试.
 
 如果你遇到一些坑,可以参考一下我的CMakeLists.txt文件或者在尝试我博客中寻找解决办法.
 
@@ -70,14 +70,11 @@ chmod +x 启动脚本.sh && ./启动脚本.sh
 如果没有Ninja生成器,可以去掉`-G Ninja`参数。
 
    ```bash
-   cd src && gcc PushBox.c -o PushBox -lncurses && ./PushBox
+   cd src && gcc PushBox.cpp -o PushBox -lncurses && ./PushBox
    ```
 
-**启动脚本命令:**
-
-   ```bash
-   chmod +x 启动脚本.sh && ./启动脚本.sh
-   ```
+若需更新，下载最新版覆盖本项目，或更新相关内容，删除build文件夹即可。
+对于macOS用户而言，安装`brew`是启动脚本能够正确运行的必要条件之一。
 
 </details>
 
