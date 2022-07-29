@@ -1,5 +1,7 @@
 # ninja log v5
 0	7	0	/Users/lanyun/CLionProjects/PushBox/cmake-build-debug/CMakeFiles/cmake.verify_globs	d07596603db0af86
-0	58	1656325817596338418	CMakeFiles/PushBox.dir/src/PushBox.cpp.o	bb866cbc3658c6fd
-58	99	1656325817637823407	PushBox	9c8be2d8a9c9ae51
+1	51	1656470720357276931	CMakeFiles/PushBox.dir/src/PushBox.cpp.o	bb866cbc3658c6fd
+51	106	1656470720413276309	PushBox	9c8be2d8a9c9ae51
 0	6	0	clean	3c8e6cc385ee00ba
+7	15	0	/Users/lanyun/CLionProjects/PushBox/cmake-build-debug/CMakeFiles/cmake.verify_globs	d07596603db0af86
+0	5	0	clean	3c8e6cc385ee00ba

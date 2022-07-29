@@ -1,2 +1,2 @@
-Top_Level:3
-Latest_Level:3
+Top_Level:1
+Latest_Level:1

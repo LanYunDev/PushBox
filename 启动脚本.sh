@@ -6,6 +6,7 @@
 
 # 注由于会使用github仓库的clone,如果感觉很慢,所以请使用科学上网.
 # 已知问题：当第一次输入q后，后面的虽然有更新提示，依然不会更新。因为都用了同一个变量input
+# 关于系统判断依然有优化的空间
 
 ## 建议不要修改文件夹名,👇下面这段代码用于判断本脚本是否处于当前项目的根目录
 #Catalog=$PWD
@@ -23,10 +24,12 @@ if [[ ! -d "build" ]]; then
 #判断是否存在build文件夹
 
 Catalog=$(dirname $(readlink -f "$0"))
+#Catalog="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 # 检测CMake是否存在,若不存在就安装
 if ! command -v cmake >/dev/null 2>&1; then
 	echo "发现你的系统环境未安装CMake,即将尝试自动安装."
-	if [[ "$(uname)" == "Darwin" || `uname -a` =~ "Darwin" ]]; then
+	if [[ -e "/opt/homebrew/bin/brew" || "$(uname)" == "Darwin" || `uname -a` =~ "Darwin"  ]]; then
 		echo "为避免您的系统环境过旧,即将尝试更新你的系统环境."
 		read -s -n 1 -p "按q键取消.否则3秒后自动开始." -t 3 input
 		if [[ $input == "q" || $input == "Q" ]]; then
@@ -35,7 +38,7 @@ if ! command -v cmake >/dev/null 2>&1; then
 		else brew update && brew upgrade && brew cleanup
 		fi
 		brew install cmake
-	elif [[ `uname -a` =~ "Manjaro" ]]; then
+	elif [[ `uname -a` =~ "Manjaro" || -e "/usr/bin/pacman" ]]; then
 		echo "为避免您的系统环境过旧,即将尝试更新你的系统环境."
 		read -s -n 1 -p "按q键取消.否则3秒后自动开始." -t 3 input
 		if [[ $input == "q" || $input == "Q" ]]; then
@@ -70,7 +73,7 @@ fi
 
 # 检测ninja是否存在,若不存在就安装
 if ! command -v ninja >/dev/null 2>&1; then
-	if [[ "$(uname)" == "Darwin" || `uname -a` =~ "Darwin" ]]; then
+	if [[ -e "/opt/homebrew/bin/brew" || "$(uname)" == "Darwin" || `uname -a` =~ "Darwin" ]]; then
 		echo "为避免您的系统环境过旧,即将尝试更新你的系统环境."
 		read -s -n 1 -p "按q键取消.否则3秒后自动开始." -t 3 input
 		if [[ $input == "q" || $input == "Q" ]]; then
@@ -79,7 +82,7 @@ if ! command -v ninja >/dev/null 2>&1; then
 		else brew update && brew upgrade && brew cleanup
 		fi
 		brew install ninja
-	elif [[ `uname -a` =~ "Manjaro" ]]; then
+	elif [[ `uname -a` =~ "Manjaro" || -e "/usr/bin/pacman" ]]; then
 		echo "为避免您的系统环境过旧,即将尝试更新你的系统环境."
 		read -s -n 1 -p "按q键取消.否则3秒后自动开始." -t 3 input
 		if [[ $input == "q" || $input == "Q" ]]; then
@@ -121,7 +124,7 @@ if ! command -v ninja >/dev/null 2>&1; then
 fi
 
 # 检测并判断是否需要安装ncurses.h库
-if [[ "$(uname)" == "Darwin" || `uname -a` =~ "Darwin" ]]; then
+if [[ -e "/opt/homebrew/bin/brew" || "$(uname)" == "Darwin" || `uname -a` =~ "Darwin" ]]; then
 	if [[ ! -d "/opt/homebrew/Cellar/ncurses" ]]; then
 		echo "为避免您的系统环境过旧,即将尝试更新你的系统环境."
 		read -s -n 1 -p "按q键取消.否则3秒后自动开始." -t 3 input
@@ -132,7 +135,7 @@ if [[ "$(uname)" == "Darwin" || `uname -a` =~ "Darwin" ]]; then
 		fi
 		brew install ncurses
 	fi
-elif [[ `uname -a` =~ "Manjaro" ]]; then
+elif [[ `uname -a` =~ "Manjaro" || -e "/usr/bin/pacman" ]]; then
 	echo "为避免您的系统环境过旧,即将尝试更新你的系统环境."
 		read -s -n 1 -p "按q键取消.否则3秒后自动开始." -t 3 input
 		if [[ $input == "q" || $input == "Q" ]]; then
@@ -176,7 +179,7 @@ fi
 cd $Catalog
 #if [[ ! -d "build" ]]; then
 	cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
-	cmake --build build --target all
+	cmake --build build --parallel 4 --target all
 	mv build/PushBox src/
 	cd src/ && ./PushBox
 elif [[ -f "src/PushBox" ]]; then

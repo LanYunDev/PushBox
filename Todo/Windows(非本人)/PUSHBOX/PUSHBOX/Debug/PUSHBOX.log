@@ -1,0 +1,6 @@
+﻿  game.c
+c:\users\tang\source\repos\pushbox\pushbox\game.c(142): warning C4013: “getch”未定义；假设外部返回 int
+c:\users\tang\source\repos\pushbox\pushbox\game.c(382): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\tang\source\repos\pushbox\pushbox\game.c(529): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\tang\source\repos\pushbox\pushbox\game.c(174): warning C4715: “event”: 不是所有的控件路径都返回值
+  PUSHBOX.vcxproj -> C:\Users\Tang\source\repos\PUSHBOX\Debug\PUSHBOX.exe
