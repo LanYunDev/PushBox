@@ -66,9 +66,12 @@ void Init() {
     raw();//这个函数会阻止字符缓冲，令程序即时处理键盘输入，一些终端命令（中断[Ctrl-c],挂起[Ctrl-z]）也会被交给程序处理
     cbreak();//禁止行缓冲区
     timeout(400);//设置超时时间
-    noecho();//设置没有回显
+    noecho();//禁用回显
     keypad(stdscr, TRUE);//识别用户的功能键，即F1、F2等这些键，代码中可以获得用户的这些按键
     curs_set(0);//调用会屏蔽掉物理指针
+//    待更新，自适应窗口大小
+//    int row, col;
+//    getmaxyx(stdscr, row, col); // 获取窗口大小
     int offset_x = (COLS - WORLD_WIDTH) / 2;//计算窗口的x轴偏移量
     int offset_y = (LINES - WORLD_HEIGHT) / 2;//计算窗口的y轴偏移量
     PushBox = newwin(WORLD_HEIGHT, WORLD_WIDTH, offset_y, offset_x);//创建窗口--newwin(高,宽,离上顶的高度,离左边的距离)
@@ -245,7 +248,8 @@ void game_over() {
     box(PushBox, 0, 0);//创建box窗口
     wrefresh(PushBox);//使box窗口生效
     mvprintw(offset_y + WORLD_HEIGHT / 2 - 7, offset_x + WORLD_WIDTH / 2 - 8, "推箱子小游戏结束 ");//绘制游戏🎮结束界面
-    mvprintw(offset_y + WORLD_HEIGHT / 2 - 5, offset_x + WORLD_WIDTH / 2 - 15, "本次记录📝: %ld  最高记录📝: %ld", Latest_Level,
+    mvprintw(offset_y + WORLD_HEIGHT / 2 - 5, offset_x + WORLD_WIDTH / 2 - 15, "本次记录📝: %ld  最高记录📝: %ld",
+             Latest_Level,
              Top_Level);//绘制界面,输出本次游玩🎮的关卡数和最高关卡数
     FILE *fp = fopen("data.txt", "w");//打开文件
     if (fp == nullptr) {//判断文件是否存在
@@ -268,7 +272,8 @@ void win() {
     wrefresh(PushBox);//使box窗口生效
     int offset_x = (COLS - WORLD_WIDTH) / 2;//计算窗口的x轴偏移量
     int offset_y = (LINES - WORLD_HEIGHT) / 2;//计算窗口的y轴偏移量
-    mvprintw(offset_y + WORLD_HEIGHT / 2, offset_x + WORLD_WIDTH / 2 - 20, "恭喜🎉通过本关卡！按任意键进入下一关～👉 ");//绘制界面
+    mvprintw(offset_y + WORLD_HEIGHT / 2, offset_x + WORLD_WIDTH / 2 - 20,
+             "恭喜🎉通过本关卡！按任意键进入下一关～👉 ");//绘制界面
     refresh();  //将虚拟屏幕上的内容写到显示屏上，并且刷新窗口
     getchar();//等待用户按键
 }
