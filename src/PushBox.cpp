@@ -296,7 +296,7 @@ Position *Draw(Position *p) {
     mvprintw(1, offset_x + WORLD_HEIGHT / 2, "上次记录📝: %ld，最高记录📝: %ld", Latest_Level, Top_Level);//绘制界面
     mvprintw(offset_y + WORLD_HEIGHT / 2 - 9, offset_x + 15, "请输入小人移动方向:");//输入提示
     mvprintw(offset_y + WORLD_HEIGHT / 2 - 8, offset_x + 7, "(W:上,S:下,A:左,D:右,或者使用方向键)");//输入提示
-    mvprintw(offset_y + WORLD_HEIGHT / 2 - 7, offset_x + 4, "(按Q可保存数据并退出,按Z可回到上一步,仅一次)");//输入提示
+    mvprintw(offset_y + WORLD_HEIGHT / 2 - 7, offset_x + 7, "(按Q可保存数据并退出,按Z可回到上一步)");//输入提示
     mvprintw(offset_y + WORLD_HEIGHT / 2 + 5, offset_x + 7, "描述: ■ 代表墙 ♀ 代表小人 ∆ 代表箱子 ");//输入提示
     mvprintw(offset_y + WORLD_HEIGHT / 2 + 7, offset_x + 8, "▲ 代表目的地 ★ 代表箱子已到达目的地 ");//输入提示
 
